@@ -1,0 +1,118 @@
+openapi: 3.0.4
+info:
+  title: Cardinal Stack
+  description: |-
+    [Cardinal Stack](https://github.com/emjunior258/cardinal-stack/)
+    
+  contact:
+    name: emjunior258
+    url: https://github.com/emjunior258
+  license:
+    name: Apache 2.0
+    url: https://github.com/emjunior258/cardinal-stack/LICENSE
+  version: 0.0.1
+externalDocs:
+  description: Cardinal Stack Docs
+  url: https://github.com/emjunior258/cardinal-stack/docs/01.intro.md
+tags:
+  - name: BackendAPI
+    description: Backend API Contract
+  - name: PushAPI
+    description: USSD Push API Contract
+
+paths:
+  /backend/request:
+    post:
+      tags:
+        - BackendAPI  
+      summary: A USSD Code request starts when a user dials a code on their mobile device.
+      description: A USSD Code request starts when a user dials a code on their mobile device.
+      operationId: userUssdRequest
+      requestBody:
+        description: A USSD Code request starts when a user dials a code on their mobile device.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BackendAPI'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '307':
+          description: Redirect to another USSD App
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+      security:
+        - backend_api:
+            - write:request
+            - read:request
+components:
+  schemas:
+    BackendAPI:
+      type: object
+      properties:
+        application: 
+          $ref: '#/components/schemas/Application'
+    Application:
+      type: object
+      properties:
+        id: 
+          type: string
+        entrypoint:
+          $ref: '#/components/schemas/Entrypoint'
+        user:
+          $ref: '#/components/schemas/User'
+        session:
+          $ref: '#/components/schemas/Session'
+        request:
+          $ref: '#/components/schemas/Request'
+    Entrypoint:
+      type: object
+      properties:
+        id: 
+          type: string
+    User:
+      type: object
+      properties:
+        input:
+          type: string
+        msisdn:
+          type: string
+        location:
+          $ref: '#/components/schemas/Location'
+    Location:
+      type: object
+      properties:
+        lac:
+          type: string
+        cid:
+          type: string
+        mcc:
+          type: string
+        mnc:
+          type: string
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        network:
+          type: string
+    Request:
+      type: object
+      properties:
+        id: 
+          type: string
+  securitySchemes:
+    backend_api:
+      type: oauth2
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
