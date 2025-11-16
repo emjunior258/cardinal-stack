@@ -38,8 +38,16 @@ paths:
       responses:
         '200':
           description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWContent'
         '307':
           description: Redirect to another USSD App
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseRedirect'
         '400':
           description: Invalid input
         '422':
@@ -109,9 +117,30 @@ components:
       properties:
         id: 
           type: string
+    ResponseWContent:
+      type: object
+      properties:
+        content: 
+          type: string
+        stage: 
+          type: string
+          
+    ResponseRedirect:
+      type: object
+      properties:
+        shortCode: 
+          type: string
+        data:
+          $ref: '#/components/schemas/BackendAPI'
   securitySchemes:
     backend_api:
       type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            "write:pets": modify pets in your account
+            "read:pets": read your pets
     api_key:
       type: apiKey
       name: api_key
