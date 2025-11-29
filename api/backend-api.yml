@@ -1,6 +1,6 @@
 openapi: 3.0.4
 info:
-  title: Cardinal Stack
+  title: Cardinal Stack Backend API
   description: |-
     [Cardinal Stack](https://github.com/emjunior258/cardinal-stack/)
     
