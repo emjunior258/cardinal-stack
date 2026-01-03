@@ -50,7 +50,7 @@ paths:
           description: Unexpected error
       security:
         - api_key: []
-  /backend/request:
+  /ussd/request:
     post:
       tags:
         - BackendAPI  
@@ -193,8 +193,9 @@ components:
           type: object
           additionalProperties:
             type: string
-        inputTrap:
-          type: string
+        inputTraps:
+          additionalProperties:
+            type: string
             
           
 
