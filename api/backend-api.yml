@@ -45,33 +45,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  activities:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        context:
-                          type: object
-                          properties:
-                            userLocation:
-                              type: boolean
-                            sessionData:
-                              type: array
-                              items:
-                                type: string
-                        caching:
-                          type: object
-                          properties:
-                            enabled:
-                              type: boolean
-                            maxAge:
-                              type: integer
-                            scope:
-                              type: string
-                            variationKey:
-                              type: string
+                $ref: '#/components/schemas/ApplicationMapResponse'    
         default:
           description: Unexpected error
       security:
@@ -133,6 +107,39 @@ components:
           $ref: '#/components/schemas/Session'
         request:
           $ref: '#/components/schemas/Request'
+    Context:  
+      type: object
+      properties:
+        userLocation:
+          type: boolean
+        sessionData:
+          type: array
+          items:
+            type: string
+    Caching:  
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        maxAge:
+          type: integer
+        scope:
+          type: string
+        variationKey:
+          type: string
+    ApplicationMapResponse:
+      type: object
+      properties:
+        activities:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              context: 
+                $ref: '#/components/schemas/Context'
+              caching: 
+                $ref: '#/components/schemas/Caching'
+
     Entrypoint:
       type: object
       properties:
