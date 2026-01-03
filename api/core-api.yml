@@ -1,0 +1,19 @@
+openapi: 3.0.4
+info:
+  title: Cardinal Stack Core API
+  description: |-
+    [Cardinal Stack](https://github.com/emjunior258/cardinal-stack/)
+    
+  contact:
+    name: emjunior258
+    url: https://github.com/emjunior258
+  license:
+    name: Apache 2.0
+    url: https://github.com/emjunior258/cardinal-stack/LICENSE
+  version: 0.0.1
+externalDocs:
+  description: Cardinal Stack Docs
+  url: https://github.com/emjunior258/cardinal-stack/docs/01.intro.md
+tags:
+  - name: CoreAPI
+    description: Core API Contract

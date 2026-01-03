@@ -1,0 +1,210 @@
+openapi: 3.0.4
+info:
+  title: Cardinal Stack Backend API
+  description: |-
+    [Cardinal Stack](https://github.com/emjunior258/cardinal-stack/)
+    
+  contact:
+    name: emjunior258
+    url: https://github.com/emjunior258
+  license:
+    name: Apache 2.0
+    url: https://github.com/emjunior258/cardinal-stack/LICENSE
+  version: 0.0.1
+externalDocs:
+  description: Cardinal Stack Docs
+  url: https://github.com/emjunior258/cardinal-stack/docs/01.intro.md
+tags:
+  - name: BackendAPI
+    description: Backend API Contract
+
+paths:
+  /applicationMap:
+    get:
+      tags:
+        - BackendAPI  
+      summary: Get the application map
+      description: Get the application map
+      operationId: getApplicationMap
+      parameters:
+        - name: applicationId
+          in: query
+          description: The ID of the application to retrieve the map for
+          required: true
+          schema:
+            type: string
+        - name: entrypointId
+          in: query
+          description: The ID of the entrypoint to retrieve the map for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationMapResponse'    
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
+  /ussd/request:
+    post:
+      tags:
+        - BackendAPI  
+      summary: A USSD Code request starts when a user dials a code on their mobile device.
+      description: A USSD Code request starts when a user dials a code on their mobile device.
+      operationId: userUssdRequest
+      requestBody:
+        description: A USSD Code request starts when a user dials a code on their mobile device.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UssdRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWContent'
+        '307':
+          description: Redirect to another USSD App 
+          headers:
+            Location:
+              description: The target to redirect to
+              schema:
+                type: string
+                example: 
+                - internal/{destination-entry-point-id}
+                - external/{short-code}
+          
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+      security:
+        - backend_api:
+            - write:request
+            - read:request
+components:
+  schemas:
+    UssdRequest:
+      type: object
+      properties:
+        activityId: 
+          type: string
+        entrypointId:
+          type: string
+        input:
+          type: string
+        locationInfo:
+          $ref: '#/components/schemas/Location'
+        sessionData:
+          additionalProperties:
+            type: string
+    Context:  
+      type: object
+      properties:
+        userLocation:
+          type: boolean
+        sessionData:
+          type: array
+          items:
+            type: string
+    Caching:  
+      type: object
+      properties:
+        enabled:
+          type: boolean
+        maxAge:
+          type: integer
+        scope:
+          type: string
+        variationKey:
+          type: string
+    ApplicationMapResponse:
+      type: object
+      properties:
+        activities:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              context: 
+                $ref: '#/components/schemas/Context'
+              caching: 
+                $ref: '#/components/schemas/Caching'
+
+    Entrypoint:
+      type: object
+      properties:
+        id: 
+          type: string
+    User:
+      type: object
+      properties:
+        input:
+          type: string
+        msisdn:
+          type: string
+        location:
+          $ref: '#/components/schemas/Location'
+    Location:
+      type: object
+      properties:
+        lac:
+          type: string
+        cid:
+          type: string
+        mcc:
+          type: string
+        mnc:
+          type: string
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        network:
+          type: string
+    Request:
+      type: object
+      properties:
+        id: 
+          type: string
+    ResponseWContent:
+      type: object
+      properties:
+        content: 
+          type: string
+        sessionData: 
+          type: object
+          additionalProperties:
+            type: string
+        inputTraps:
+          additionalProperties:
+            type: string
+            
+          
+
+  securitySchemes:
+    backend_api:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            "write:pets": modify pets in your account
+            "read:pets": read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
