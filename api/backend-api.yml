@@ -17,10 +17,65 @@ externalDocs:
 tags:
   - name: BackendAPI
     description: Backend API Contract
-  - name: PushAPI
-    description: USSD Push API Contract
 
 paths:
+  /applicationMap:
+    get:
+      tags:
+        - BackendAPI  
+      summary: Get the application map
+      description: Get the application map
+      operationId: getApplicationMap
+      parameters:
+        - name: applicationId
+          in: query
+          description: The ID of the application to retrieve the map for
+          required: true
+          schema:
+            type: string
+        - name: entrypointId
+          in: query
+          description: The ID of the entrypoint to retrieve the map for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  activities:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        context:
+                          type: object
+                          properties:
+                            userLocation:
+                              type: boolean
+                            sessionData:
+                              type: array
+                              items:
+                                type: string
+                        caching:
+                          type: object
+                          properties:
+                            enabled:
+                              type: boolean
+                            maxAge:
+                              type: integer
+                            scope:
+                              type: string
+                            variationKey:
+                              type: string
+        default:
+          description: Unexpected error
+      security:
+        - api_key: []
   /backend/request:
     post:
       tags:
@@ -132,6 +187,7 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/BackendAPI'
+
   securitySchemes:
     backend_api:
       type: oauth2
