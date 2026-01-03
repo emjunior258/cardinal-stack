@@ -72,11 +72,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseWContent'
         '307':
-          description: Redirect to another USSD App
-          content:
-            application/json:
+          description: Redirect to another USSD App 
+          headers:
+            Location:
+              description: The target to redirect to
               schema:
-                $ref: '#/components/schemas/ResponseRedirect'
+                type: string
+                example: 
+                - internal/{destination-entry-point-id}
+                - external/{short-code}
+          
         '400':
           description: Invalid input
         '422':
@@ -184,16 +189,14 @@ components:
       properties:
         content: 
           type: string
-        stage: 
+        sessionData: 
+          type: object
+          additionalProperties:
+            type: string
+        inputTrap:
           type: string
+            
           
-    ResponseRedirect:
-      type: object
-      properties:
-        shortCode: 
-          type: string
-        data:
-          $ref: '#/components/schemas/BackendAPI'
 
   securitySchemes:
     backend_api:
