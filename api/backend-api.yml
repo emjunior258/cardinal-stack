@@ -62,7 +62,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BackendAPI'
+              $ref: '#/components/schemas/UssdRequest'
         required: true
       responses:
         '200':
@@ -94,24 +94,20 @@ paths:
             - read:request
 components:
   schemas:
-    BackendAPI:
+    UssdRequest:
       type: object
       properties:
-        application: 
-          $ref: '#/components/schemas/Application'
-    Application:
-      type: object
-      properties:
-        id: 
+        activityId: 
           type: string
-        entrypoint:
-          $ref: '#/components/schemas/Entrypoint'
-        user:
-          $ref: '#/components/schemas/User'
-        session:
-          $ref: '#/components/schemas/Session'
-        request:
-          $ref: '#/components/schemas/Request'
+        entrypointId:
+          type: string
+        input:
+          type: string
+        locationInfo:
+          $ref: '#/components/schemas/Location'
+        sessionData:
+          additionalProperties:
+            type: string
     Context:  
       type: object
       properties:
